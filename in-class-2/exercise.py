@@ -12,10 +12,20 @@ exhibits = [
 ]
 
 # 1. Print each exhibit on its own line, numbered starting at 1:   1. The Art of Everyday Life
-
+count = 1
+for i in exhibits:
+    print("-", count, ".", exhibits[i])
+    count = count+1
 # 2. Print a blank line, then each exhibit in ALL CAPS followed by its length:   PAPER CUTS 10
-
+for i in exhibits:
+    print("-", exhibits[i].upper())
 # 3. Print a blank line, then how many exhibit names contain the word "the" (any case):   With "the": 3
+countTwo = 0
+for i in exhibits:
+    if "the" in exhibits
+        countTwo = countTwo+1
+
+# still trying to figure out the difference between java & python :"") the two languages are blending together
 
 # BONUS (optional): Python has a built-in function, enumerate(), that numbers items for you.
 # Rewrite your code for #1 so it uses enumerate() instead of adding 1 each time.
