@@ -1,19 +1,34 @@
 <!DOCTYPE html>
-<html>
-<head><title>Results for {{ term }}</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Results for {{ term }} - Art Search</title>
+</head>
 <body>
-  <h1>Results for "{{ term }}"</h1>
+  <main>
+    <h1>Results for "{{ term }}"</h1>
 
-  {% if artworks %}
-    <ul>
-      {% for art in artworks %}
-        <li>{{ art.title }} - {{ art.artist_title }} ({{ art.date_display }})</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No artwork found for "{{ term }}".</p>
-  {% endif %}
+    {% if artworks %}
+      <ul>
+        {% for art in artworks %}
+          <li>
+            {% if art.image_id %}
+              <img src="https://www.artic.edu/iiif/2/{{ art.image_id }}/full/200,/0/default.jpg"
+                   alt="{{ art.title }} by {{ art.artist_title or 'unknown artist' }}"
+                   width="200">
+            {% else %}
+              <p>No image available</p>
+            {% endif %}
+            <p>{{ art.title }} - {{ art.artist_title or "Unknown" }} ({{ art.date_display }})</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No artwork found for "{{ term }}".</p>
+    {% endif %}
 
-  <a href="/">New search</a>
+    <a href="/">New search</a>
+  </main>
 </body>
 </html>

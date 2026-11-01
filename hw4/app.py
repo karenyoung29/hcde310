@@ -1,16 +1,11 @@
 # imports
 import requests
-
+from flask import Flask, render_template, request
 
 # get fields
 FIELDS = "title,artist_title,date_display,image_id"
-
-# search results 
-
-
-# function for getting data
-
-
+URL = "https://api.artic.edu/api/v1/artworks/search"
+HEADERS = {"AIC-User-Agent": "HCDE310 student project"}
 
 # saving results
 def save_results(artworks, filename):
@@ -25,9 +20,7 @@ def save_results(artworks, filename):
 # user input
 term = input("Search the Art Institute for: ")
 
-url = "https://api.artic.edu/api/v1/artworks/search"
 params = {"q" : term, "fields" : FIELDS}  
-headers = {"AIC-User-Agent" : "HCDE310 student project"} 
 response = requests.get(url, params=params, headers=headers)
 
 # response checks   
@@ -49,7 +42,6 @@ else:
 
 
 # html lines / building page
-from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -73,8 +65,20 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
+# AI-written
+def add_image_urls(artworks):
+    """Takes a list of artwork dictionaries and returns the same list with an "image_url" added to each (None if no image_id)."""
+    for art in artworks:
+        art["image_url"] = None
+        if art.get("image_id"):
+            art["image_url"] = "https://www.artic.edu/iiif/2/" + art["image_id"] + "/full/843,/0/default.jpg"
+    return artworks
 
-
+print(add_image_urls([
+    {"title": "Water Lilies", "image_id": "abc123"},
+    {"title": "Nighthawks", "image_id": None},
+]))
+# AI written end
 
 # for readme
 # open http://127.0.0.1:5000
