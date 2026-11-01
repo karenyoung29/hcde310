@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Results for {{ term }}</title></head>
+<body>
+  <h1>Results for "{{ term }}"</h1>
+
+  {% if artworks %}
+    <ul>
+      {% for art in artworks %}
+        <li>{{ art.title }} - {{ art.artist_title }} ({{ art.date_display }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No artwork found for "{{ term }}".</p>
+  {% endif %}
+
+  <a href="/">New search</a>
+</body>
+</html>

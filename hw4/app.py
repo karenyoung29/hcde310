@@ -1,8 +1,9 @@
-# import results
+# imports
 import requests
 
+
 # get fields
-FIELDS = "title,artist_title, date_display, image_id"
+FIELDS = "title,artist_title,date_display,image_id"
 
 # search results 
 
@@ -13,7 +14,7 @@ FIELDS = "title,artist_title, date_display, image_id"
 
 # saving results
 def save_results(artworks, filename):
-    with open("results.txt", "a") as f:
+    with open(filename, "a") as f:
          
         for i in artworks:
             title = i.get("title") or "Unknown"
@@ -40,29 +41,37 @@ else:
             print(f'No artwork found for "{term}".')
     else:
         print(f'Found results for "{term}":')
-        for work in results:
-            print_artwork(work)
+        # for work in results:
+            # print_artwork(work)
         save_results(results, "results.txt")
 
 
 
 
 # html lines / building page
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-   artworks = [{"title": "Lilies"},
-               {"title": "Nighthawks"}]
-   return render_template("home.html", artworks=artworks)
+    return render_template("home.html")
+
+@app.route("/results")
+def results():
+    term = request.args.get("q", "")
+    artworks = [
+        {"title": "Water Lilies", "artist_title": "Claude Monet", "date_display": "1906"},
+        {"title": "Nighthawks", "artist_title": "Edward Hopper", "date_display": "1942"},
+        {"title": "American Gothic", "artist_title": "Grant Wood", "date_display": "1930"},
+    ]
+
+    return render_template("results.html", term=term, artworks=artworks)
 
 
+if __name__ == "__main__":
+    app.run(debug=True)
 
-@app.route("/about")
-def about():
-   return "About us"
 
 
 
