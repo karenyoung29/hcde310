@@ -17,26 +17,32 @@ def save_results(artworks, filename):
             year = i.get("date_display") or "Unknown"
             f.write(f"{title} - {artist} ({year}) \n")
 
-# user input
-term = input("Search the Art Institute for: ")
+# function for getting data
+def get_artworks(term):
+    url = "https://api.artic.edu/api/v1/artworks/search"
+    params = {"q" : term, "fields" : FIELDS}
+    headers = {"AIC-User-Agent" : "HCDE310 student project"}
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
 
-params = {"q" : term, "fields" : FIELDS}  
-response = requests.get(url, params=params, headers=headers)
-
-# response checks   
-if response.status_code != 200:
-    print(response.status_code, "error", response.reason)
-else:
-    data = response.json()
-    results = data["data"]
-
-    if len(results) == 0:
-            print(f'No artwork found for "{term}".')
+    # response checks
+    if response.status_code != 200:
+        print(response.status_code, "error", response.reason)
+        return None                                  
     else:
-        print(f'Found results for "{term}":')
-        # for work in results:
-            # print_artwork(work)
-        save_results(results, "results.txt")
+        data = response.json()
+        results = data["data"]
+
+        if len(results) == 0:
+                print(f'No artwork found for "{term}".')
+        else:
+            print(f'Found results for "{term}":')
+            save_results(results, "results.txt")
+
+        return results                                
 
 
 
@@ -52,13 +58,17 @@ def home():
 @app.route("/results")
 def results():
     term = request.args.get("q", "")
-    artworks = [
-        {"title": "Water Lilies", "artist_title": "Claude Monet", "date_display": "1906"},
-        {"title": "Nighthawks", "artist_title": "Edward Hopper", "date_display": "1942"},
-        {"title": "American Gothic", "artist_title": "Grant Wood", "date_display": "1930"},
-    ]
 
-    return render_template("results.html", term=term, artworks=artworks)
+    if term == "":
+        return render_template("home.html", message="Please type something to search for, like \"cats\" or \"Monet\".")
+
+    artworks = get_artworks(term)
+
+    if artworks is None:
+        return render_template("results.html", term=term, artworks=[], error=True)
+
+    add_image_urls(artworks)
+    return render_template("results.html", term=term, artworks=artworks, error=False)
 
 
 if __name__ == "__main__":
@@ -74,10 +84,6 @@ def add_image_urls(artworks):
             art["image_url"] = "https://www.artic.edu/iiif/2/" + art["image_id"] + "/full/843,/0/default.jpg"
     return artworks
 
-print(add_image_urls([
-    {"title": "Water Lilies", "image_id": "abc123"},
-    {"title": "Nighthawks", "image_id": None},
-]))
 # AI written end
 
 # for readme

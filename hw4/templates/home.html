@@ -6,6 +6,9 @@
   <form action="/results" method="get">
     <input type="text" name="q" placeholder="e.g. cats" required>
     <button type="submit">Search</button>
+    {% if message %}
+      <p role="alert">{{ message }}</p>
+    {% endif %}
   </form>
 </body>
 </html>

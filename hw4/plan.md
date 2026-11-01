@@ -1,3 +1,4 @@
+1. image: plandraft.webp
 2. Fields from API responts needed: title, artist_title, date_display, image_id
 
 3. 
