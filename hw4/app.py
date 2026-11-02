@@ -2,7 +2,7 @@
 import requests
 from flask import Flask, render_template, request
 
-# get fields
+# fields
 FIELDS = "title,artist_title,date_display,image_id"
 URL = "https://api.artic.edu/api/v1/artworks/search"
 HEADERS = {"AIC-User-Agent": "HCDE310 student project"}
@@ -22,6 +22,8 @@ def get_artworks(term):
     url = "https://api.artic.edu/api/v1/artworks/search"
     params = {"q" : term, "fields" : FIELDS}
     headers = {"AIC-User-Agent" : "HCDE310 student project"}
+
+    #checks if server is slow
     try:
         response = requests.get(url, params=params, headers=headers, timeout=10)
     except requests.exceptions.RequestException as e:
@@ -47,23 +49,27 @@ def get_artworks(term):
 
 
 
-# html lines / building page
+# building the page
 
 app = Flask(__name__)
 
+# home route
 @app.route("/")
 def home():
     return render_template("home.html")
 
+# results route
 @app.route("/results")
 def results():
     term = request.args.get("q", "")
 
+    # handles if input is empty
     if term == "":
         return render_template("home.html", message="Please type something to search for, like \"cats\" or \"Monet\".")
 
     artworks = get_artworks(term)
 
+    # handles if there is no artwork
     if artworks is None:
         return render_template("results.html", term=term, artworks=[], error=True)
 
@@ -74,7 +80,7 @@ def results():
 if __name__ == "__main__":
     app.run(debug=True)
 
-
+# function to add images to the webapp
 # AI-written
 def add_image_urls(artworks):
     """Takes a list of artwork dictionaries and returns the same list with an "image_url" added to each (None if no image_id)."""
@@ -86,8 +92,7 @@ def add_image_urls(artworks):
 
 # AI written end
 
-# for readme
-# open http://127.0.0.1:5000
-# Ctrl+C to stop
+# I am now just seeing api.py for hw3 in the instructions, but I already combined all the code in app.py, hope that works!
+
 
 

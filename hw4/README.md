@@ -5,3 +5,6 @@ How to run: in the terminal, type "python app.py" and open the link, http://127.
 Press Ctrl + C to end the run.
 
 Screenshot: homess.png / resultss.png
+
+
+Note: When I run the app, the images do not show up and it shows that they are blocked. 
